@@ -1,6 +1,8 @@
 package system.system_cinema.Model;
 
 import jakarta.persistence.*;
+import java.util.Set;
+
 @Entity
 public class User {
     @Id
@@ -11,17 +13,22 @@ public class User {
     private String password;
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     // Constructors, Getters, and Setters
     public User() {}
 
-    public User(String username, String password, String email, Role role) {
+    public User(String username, String password, String email, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = role;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -56,15 +63,11 @@ public class User {
         this.email = email;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public enum Role {
-        USER, ADMIN
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
