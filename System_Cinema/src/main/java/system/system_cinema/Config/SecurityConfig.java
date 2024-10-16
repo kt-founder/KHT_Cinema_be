@@ -108,4 +108,6 @@ public class SecurityConfig {
         byte[] keyBytes = Decoders.BASE64.decode(signerKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
 }
