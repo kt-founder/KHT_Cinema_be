@@ -12,14 +12,17 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
-    @Query("select new system.system_cinema.DTO.Response.UserResponse(u.id, u.name, u.email, u.phone, u.username)" +
+    @Query("select new system.system_cinema.DTO.Response.UserResponse(u.id, u.name, u.email, u.phone, u.username, u.avt, null)" +
             "from User u where u.username = :value")
     UserResponse findByName(@Param("value") String name);
-    @Query("select new system.system_cinema.DTO.Response.UserResponse(u.id, u.name, u.email, u.phone,u.username)" +
+    @Query("select new system.system_cinema.DTO.Response.UserResponse(u.id, u.name, u.email, u.phone,u.username, u.avt, u.isActive)" +
             "from User u join u.roles r where r.name = 'USER'")
     List<UserResponse> findUsers();
     @Query("select u from User u join u.roles r where r.name = 'USER' and u.username = :value")
     Optional<User> findUser(String value);
+    @Query("select u from User u join u.roles r where r.name != 'USER' and u.username = :value")
+    Optional<User> findAdmin(String value);
 }

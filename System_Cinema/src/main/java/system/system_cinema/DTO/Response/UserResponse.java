@@ -12,5 +12,7 @@ import lombok.experimental.FieldDefaults;
 public class UserResponse {
     String id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String name, email, phone, username;
+    String name, email, phone, username, avt;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    Boolean isActive;
 }

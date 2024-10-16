@@ -1,6 +1,7 @@
 package system.system_cinema.Service.ServiceImplement;
 
 import io.jsonwebtoken.Claims;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,8 +10,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import system.system_cinema.DTO.Request.EditUserRequest;
 import system.system_cinema.DTO.Request.LoginRequest;
 import system.system_cinema.DTO.Request.SignUpRequest;
+import system.system_cinema.DTO.Response.OTP_Response;
 import system.system_cinema.DTO.Response.TokenResponse;
 import system.system_cinema.Model.Role;
 import system.system_cinema.Model.User;
@@ -18,6 +21,8 @@ import system.system_cinema.Repository.RoleRepository;
 import system.system_cinema.Repository.UserRepository;
 import system.system_cinema.Service.AuthenticateService;
 
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -28,12 +33,28 @@ public class AuthenticateServiceImp implements AuthenticateService {
     private final UserRepository userRepository;
     JwtServiceImp jwtService;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder getPasswordEncoder;
+    PasswordEncoder getPasswordEncoder;
+    MailService mailService;
 
     @Override
     public TokenResponse authenticate(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         var user = userRepository.findUser(loginRequest.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException(loginRequest.getUsername() + " not found"));
+        if (!user.isActive()){
+            throw new UsernameNotFoundException("Account has not been activated");
+        }
+        return TokenResponse
+                .builder()
+                .access_token(jwtService.generateAccessToken(getClaims(user), user.getUsername()))
+                .refresh_token(jwtService.generateRefreshToken(user.getUsername()))
+                .build();
+    }
+
+    @Override
+    public TokenResponse authenticateAdmin(LoginRequest loginRequest) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        var user = userRepository.findAdmin(loginRequest.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(loginRequest.getUsername() + " not found"));
         if (!user.isActive()){
             throw new UsernameNotFoundException("Account has not been activated");
@@ -57,6 +78,7 @@ public class AuthenticateServiceImp implements AuthenticateService {
                 .username(signUpRequest.getUsername())
                 .password(getPasswordEncoder.encode(signUpRequest.getPassword()))
                 .email(signUpRequest.getEmail())
+                .dateCreate(LocalDateTime.now())
                 .isActive(true)
                 .roles(roles)
                 .build();
@@ -82,11 +104,31 @@ public class AuthenticateServiceImp implements AuthenticateService {
                 .build();
     }
 
+    @Override
+    public OTP_Response createOTP(String email) throws MessagingException, UnsupportedEncodingException {
+        String code = mailService.sendEmail(email);
+        return OTP_Response
+                .builder()
+                .code(code)
+                .expiration(LocalDateTime.now())
+                .username(userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Not found user") ).getUsername())
+                .build();
+    }
+//    @Override
+//    public void UpdatePassword(EditUserRequest editUserRequest) {
+//        User user = userRepository.findByEmail(editUserRequest.getEmail()).orElseThrow(()->new RuntimeException("Not found user"));
+//        user.setPassword(getPasswordEncoder.encode(editUserRequest.getPassword()));
+//        userRepository.save(user);
+//    }
+
     private Map<String, Object> getClaims(User user) {
         Map<String, Object> map = new HashMap<>();
+        StringBuilder s = new StringBuilder();
         for (var role : user.getRoles()) {
-            map.put("role", role.getName());
+//            map.put("role", role.getName());
+            s.append(role.getName()).append(" ");
         }
+        map.put("role", s);
         return map;
     }
 }
