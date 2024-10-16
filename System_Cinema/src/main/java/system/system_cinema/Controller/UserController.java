@@ -7,7 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import system.system_cinema.DTO.ApiResponse;
 import system.system_cinema.DTO.Request.EditUserRequest;
+import system.system_cinema.DTO.Request.OneFieldRequest;
 import system.system_cinema.DTO.Response.UserResponse;
+import system.system_cinema.Service.ServiceImplement.AuthenticateServiceImp;
 import system.system_cinema.Service.ServiceImplement.UserServiceImp;
 import system.system_cinema.Service.UserService;
 
@@ -19,6 +21,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
     UserServiceImp userServiceImp;
+    private final AuthenticateServiceImp authenticateServiceImp;
 
     @GetMapping("/get-my-infor")
     public ApiResponse<UserResponse> getMyInfor() {
@@ -49,7 +52,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/edit-profile")
+    @PatchMapping("/edit-profile")
     public ApiResponse<?> editProfile(@RequestBody EditUserRequest editUserRequest) {
         try {
             userServiceImp.EditUser(editUserRequest);
@@ -57,6 +60,19 @@ public class UserController {
                     .message("Successful")
                     .build();
         } catch (Exception e){
+            return ApiResponse.builder()
+                    .error(e.getMessage())
+                    .build();
+        }
+    }
+    @DeleteMapping("/lock-account")
+    public ApiResponse<?> lockAccount(@RequestBody OneFieldRequest oneFieldRequest) {
+        try {
+            userServiceImp.ActivateUser(oneFieldRequest.getInput());
+            return ApiResponse.builder()
+                    .message("Successful")
+                    .build();
+        } catch (Exception e) {
             return ApiResponse.builder()
                     .error(e.getMessage())
                     .build();

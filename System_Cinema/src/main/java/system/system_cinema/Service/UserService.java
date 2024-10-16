@@ -9,8 +9,10 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    UserDetailsService userDetailsService();
+//    UserDetailsService userDetailsService();
     UserResponse GetUserDetails();
     List<UserResponse> GetAllUsers();
     void EditUser(EditUserRequest editUserRequest);
+    void UpdatePassword(EditUserRequest editUserRequest);
+    void ActivateUser(String infor);
 }

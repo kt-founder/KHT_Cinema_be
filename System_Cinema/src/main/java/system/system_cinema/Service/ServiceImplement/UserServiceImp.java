@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import system.system_cinema.DTO.Request.EditUserRequest;
 import system.system_cinema.DTO.Response.UserResponse;
@@ -22,11 +23,11 @@ import java.util.List;
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    @Override
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
-    }
+    PasswordEncoder getPasswordEncoder;
+//    @Override
+//    public UserDetailsService userDetailsService() {
+//        return username -> userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
+//    }
 
     @Override
     public UserResponse GetUserDetails() {
@@ -48,5 +49,17 @@ public class UserServiceImp implements UserService {
         }
         userRepository.save(userMapper.update(editUserRequest, user));
     }
+    @Override
+    public void UpdatePassword(EditUserRequest editUserRequest) {
+        User user = userRepository.findByUsername(editUserRequest.getUsername()).orElseThrow(()->new RuntimeException("Not found user"));
+        user.setPassword(getPasswordEncoder.encode(editUserRequest.getPassword()));
+        userRepository.save(user);
+    }
 
+    @Override
+    public void ActivateUser(String inFor) {
+        User user = userRepository.findById(inFor).orElseThrow(()->new RuntimeException("Not found user"));
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+    }
 }

@@ -17,6 +17,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -27,6 +29,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import system.system_cinema.Repository.UserRepository;
 import system.system_cinema.Service.UserService;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -41,7 +44,8 @@ public class SecurityConfig {
     private final String[] WHITE_LIST = {"/auth/**","/swagger-ui/**","/v3/**"};
     @Value("${jwt.signerKey}")
     private String signerKey;
-    private final UserService userService;
+//    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -99,7 +103,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider provider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService.userDetailsService());
+        provider.setUserDetailsService(userDetailService());
+//        provider.setUserDetailsService(userService.userDetailsService());
         provider.setPasswordEncoder(getPasswordEncoder());
         return provider;
     }
@@ -107,5 +112,9 @@ public class SecurityConfig {
     public Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(signerKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+    @Bean
+    public UserDetailsService userDetailService() {
+        return username -> userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
