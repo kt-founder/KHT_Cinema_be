@@ -1,16 +1,28 @@
 package system.system_cinema.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+
+@Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Showtime {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    private LocalDateTime startTime;
+    private LocalDateTime dateCreate,startTime, endTime;
 
     @ManyToOne
     @JoinColumn(name = "movie_id")
@@ -20,44 +32,8 @@ public class Showtime {
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall cinemaHall;
 
-    // Constructors, Getters, and Setters
-    public Showtime() {}
+    @OneToMany(mappedBy = "showtime")
+    @JsonIgnore
+    private List<Ticket> tickets;
 
-    public Showtime(LocalDateTime startTime, Movie movie, CinemaHall cinemaHall) {
-        this.startTime = startTime;
-        this.movie = movie;
-        this.cinemaHall = cinemaHall;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public CinemaHall getCinemaHall() {
-        return cinemaHall;
-    }
-
-    public void setCinemaHall(CinemaHall cinemaHall) {
-        this.cinemaHall = cinemaHall;
-    }
 }

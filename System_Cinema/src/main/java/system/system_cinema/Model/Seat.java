@@ -1,58 +1,34 @@
 package system.system_cinema.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
+@Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Seat {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    private int seatNumber;
-    private boolean isAvailable;
+    private String seatNumber;
 
     @ManyToOne
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall cinemaHall;
 
-    // Constructors, Getters, and Setters
-    public Seat() {}
+    @JsonIgnore
+    @OneToMany(mappedBy = "seats")
+    private Set<SeatBooking> seatBookings;
 
-    public Seat(int seatNumber, boolean isAvailable, CinemaHall cinemaHall) {
-        this.seatNumber = seatNumber;
-        this.isAvailable = isAvailable;
-        this.cinemaHall = cinemaHall;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getSeatNumber() {
-        return seatNumber;
-    }
-
-    public void setSeatNumber(int seatNumber) {
-        this.seatNumber = seatNumber;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
-    public CinemaHall getCinemaHall() {
-        return cinemaHall;
-    }
-
-    public void setCinemaHall(CinemaHall cinemaHall) {
-        this.cinemaHall = cinemaHall;
-    }
+    @ManyToOne
+    TypeSeat typeSeats;
 }

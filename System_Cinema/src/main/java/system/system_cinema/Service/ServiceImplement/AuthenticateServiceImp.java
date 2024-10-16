@@ -33,8 +33,11 @@ public class AuthenticateServiceImp implements AuthenticateService {
     @Override
     public TokenResponse authenticate(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        var user = userRepository.findByUsername(loginRequest.getUsername())
+        var user = userRepository.findUser(loginRequest.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(loginRequest.getUsername() + " not found"));
+        if (!user.isActive()){
+            throw new UsernameNotFoundException("Account has not been activated");
+        }
         return TokenResponse
                 .builder()
                 .access_token(jwtService.generateAccessToken(getClaims(user), user.getUsername()))
@@ -54,6 +57,7 @@ public class AuthenticateServiceImp implements AuthenticateService {
                 .username(signUpRequest.getUsername())
                 .password(getPasswordEncoder.encode(signUpRequest.getPassword()))
                 .email(signUpRequest.getEmail())
+                .isActive(true)
                 .roles(roles)
                 .build();
         userRepository.save(user);

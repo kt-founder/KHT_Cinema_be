@@ -13,6 +13,7 @@ import system.system_cinema.Model.User;
 import system.system_cinema.Repository.RoleRepository;
 import system.system_cinema.Repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,10 +30,13 @@ public class ApplicationConfig {
             if(userRepository.findByUsername("admin").isEmpty()) {
                 Set<Role> roles = new HashSet<>();
                 roles.add(roleRepository.findByName("ADMIN"));
+                roles.add(roleRepository.findByName("SUPER_ADMIN"));
                 User user = User.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
                         .roles(roles)
+                        .dateCreate(LocalDateTime.now())
+                        .isActive(true)
                         .build();
                 userRepository.save(user);
                 log.warn("admin user has been create with default password: admin, please change it");

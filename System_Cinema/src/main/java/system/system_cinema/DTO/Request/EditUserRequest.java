@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EditUserRequest {
-    long id;
+    String id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String name, email, phone, username, password;
 }
