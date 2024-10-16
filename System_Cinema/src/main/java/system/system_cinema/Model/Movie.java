@@ -26,7 +26,10 @@ public class Movie {
     private String description;
     private String director;
     private LocalDate releaseDate;
+    private String image;
+
     private boolean isActive;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "movie_genre",
