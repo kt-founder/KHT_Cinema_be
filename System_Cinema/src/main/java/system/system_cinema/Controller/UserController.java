@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/account")
+//@CrossOrigin("http://localhost:3000")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
