@@ -88,6 +88,7 @@ public class AuthenticationController {
     @PatchMapping("/update-password")
     public ApiResponse<?> updatePassword(@RequestBody EditUserRequest editUserRequest) {
         try {
+            System.out.println(editUserRequest.getPassword() + " " + editUserRequest.getId());
 //            authenticateServiceImp.UpdatePassword(editUserRequest);
             userServiceImp.UpdatePassword(editUserRequest);
             return ApiResponse.builder()

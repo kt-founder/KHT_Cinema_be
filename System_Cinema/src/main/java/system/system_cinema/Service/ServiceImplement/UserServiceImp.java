@@ -51,7 +51,7 @@ public class UserServiceImp implements UserService {
     }
     @Override
     public void UpdatePassword(EditUserRequest editUserRequest) {
-        User user = userRepository.findByUsername(editUserRequest.getUsername()).orElseThrow(()->new RuntimeException("Not found user"));
+        User user = userRepository.findById(editUserRequest.getId()).orElseThrow(()->new RuntimeException("Not found user"));
         user.setPassword(getPasswordEncoder.encode(editUserRequest.getPassword()));
         userRepository.save(user);
     }
