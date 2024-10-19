@@ -15,6 +15,8 @@ public class MovieRequest {
     String title;
     String genre;
     String description;
+    String duration;
+    String actors;
     String director;
     LocalDate releaseDate;
     String image;

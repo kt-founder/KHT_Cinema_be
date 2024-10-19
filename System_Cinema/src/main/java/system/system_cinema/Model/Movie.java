@@ -24,6 +24,8 @@ public class Movie {
     private String title;
     private String genre;
     private String description;
+    private  String duration;
+    private  String actors;
     private String director;
     private LocalDate releaseDate;
     private String image;
