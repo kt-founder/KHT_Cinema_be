@@ -59,6 +59,8 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteMovie(String id) {
-        movieRepository.deleteById(id);
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie not found"));
+        movie.setActive(!movie.isActive());
+        movieRepository.save(movie);
     }
 }

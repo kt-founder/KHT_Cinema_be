@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import system.system_cinema.DTO.Request.EditUserRequest;
 import system.system_cinema.DTO.Request.LoginRequest;
 import system.system_cinema.DTO.Request.SignUpRequest;
+import system.system_cinema.DTO.Request.VerifyRequest;
 import system.system_cinema.DTO.Response.OTP_Response;
 import system.system_cinema.DTO.Response.TokenResponse;
 import system.system_cinema.Model.Role;
@@ -105,13 +106,14 @@ public class AuthenticateServiceImp implements AuthenticateService {
     }
 
     @Override
-    public OTP_Response createOTP(String email) throws MessagingException, UnsupportedEncodingException {
-        String code = mailService.sendEmail(email);
+    public OTP_Response createOTP(VerifyRequest verifyRequest) throws MessagingException, UnsupportedEncodingException {
+        String id = userRepository.findByEmailAndUsername(verifyRequest.getEmail(), verifyRequest.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Not found user") ).getId();
+        String code = mailService.sendEmail(verifyRequest.getEmail());
         return OTP_Response
                 .builder()
                 .code(code)
                 .expiration(LocalDateTime.now())
-                .username(userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Not found user") ).getUsername())
+                .id(id)
                 .build();
     }
 //    @Override

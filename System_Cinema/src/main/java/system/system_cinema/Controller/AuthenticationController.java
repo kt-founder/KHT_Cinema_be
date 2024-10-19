@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 import system.system_cinema.DTO.ApiResponse;
-import system.system_cinema.DTO.Request.EditUserRequest;
-import system.system_cinema.DTO.Request.LoginRequest;
-import system.system_cinema.DTO.Request.OneFieldRequest;
-import system.system_cinema.DTO.Request.SignUpRequest;
+import system.system_cinema.DTO.Request.*;
 import system.system_cinema.DTO.Response.OTP_Response;
 import system.system_cinema.DTO.Response.TokenResponse;
 import system.system_cinema.Service.ServiceImplement.AuthenticateServiceImp;
@@ -77,11 +74,10 @@ public class AuthenticationController {
         }
     }
     @PostMapping("forgot-password")
-    public ApiResponse<OTP_Response> forgotPassword(@RequestBody OneFieldRequest oneFieldRequest) {
-        System.out.println(oneFieldRequest.getInput());
+    public ApiResponse<OTP_Response> forgotPassword(@RequestBody VerifyRequest request) {
         try {
             return ApiResponse.<OTP_Response>builder()
-                    .data(authenticateServiceImp.createOTP(oneFieldRequest.getInput()))
+                    .data(authenticateServiceImp.createOTP(request))
                     .build();
         } catch (Exception e){
             return ApiResponse.<OTP_Response>builder()
