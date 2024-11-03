@@ -14,21 +14,20 @@ import system.system_cinema.Model.Ticket;
 import system.system_cinema.Repository.BookingRepository;
 import system.system_cinema.Repository.CinemaHallRepository;
 import system.system_cinema.Repository.MovieRepository;
-import system.system_cinema.Repository.ShowtimeRepository;
+import system.system_cinema.Repository.ShowTimeRepository;
 import system.system_cinema.Service.ShowtimeService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ShowtimeServiceImpl implements ShowtimeService {
+public class ShowTimeServiceImpl implements ShowtimeService {
 
     private final CinemaHallRepository cinemaHallRepository;
     private final MovieRepository movieRepository;
-    private final ShowtimeRepository showtimeRepository;
+    private final ShowTimeRepository showtimeRepository;
     private final ShowtimeMapper showtimeMapper;
     private final BookingRepository bookingRepository;
 

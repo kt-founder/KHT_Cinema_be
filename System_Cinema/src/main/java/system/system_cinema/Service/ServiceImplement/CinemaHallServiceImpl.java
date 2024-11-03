@@ -2,7 +2,6 @@ package system.system_cinema.Service.ServiceImplement;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import system.system_cinema.DTO.Request.CinemaHallRequest;
 import system.system_cinema.DTO.Request.ShowtimeRequest;
 import system.system_cinema.DTO.Response.CinemaHallResponse;
 import system.system_cinema.Mapper.CinemaHallMapper;
@@ -11,7 +10,7 @@ import system.system_cinema.Model.Movie;
 import system.system_cinema.Model.Showtime;
 import system.system_cinema.Repository.CinemaHallRepository;
 import system.system_cinema.Repository.MovieRepository;
-import system.system_cinema.Repository.ShowtimeRepository;
+import system.system_cinema.Repository.ShowTimeRepository;
 import system.system_cinema.Service.CinemaHallService;
 
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class CinemaHallServiceImpl implements CinemaHallService {
 
     private final CinemaHallRepository cinemaHallRepository;
-    private final ShowtimeRepository showtimeRepository;
+    private final ShowTimeRepository showtimeRepository;
     private final MovieRepository movieRepository;
     private final CinemaHallMapper cinemaHallMapper;
 
