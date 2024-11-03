@@ -2,16 +2,25 @@ package system.system_cinema.Service.ServiceImplement;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import system.system_cinema.DTO.Request.DetailShowTime;
+import system.system_cinema.DTO.Request.ShowTimeRequestCreate;
 import system.system_cinema.DTO.Request.ShowtimeRequest;
 import system.system_cinema.DTO.Response.ShowtimeResponse;
 import system.system_cinema.Mapper.ShowtimeMapper;
 import system.system_cinema.Model.CinemaHall;
 import system.system_cinema.Model.Movie;
 import system.system_cinema.Model.Showtime;
+import system.system_cinema.Model.Ticket;
+import system.system_cinema.Repository.BookingRepository;
 import system.system_cinema.Repository.CinemaHallRepository;
 import system.system_cinema.Repository.MovieRepository;
 import system.system_cinema.Repository.ShowtimeRepository;
 import system.system_cinema.Service.ShowtimeService;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +30,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     private final MovieRepository movieRepository;
     private final ShowtimeRepository showtimeRepository;
     private final ShowtimeMapper showtimeMapper;
+    private final BookingRepository bookingRepository;
 
     @Override
     public ShowtimeResponse createShowtime(String cinemaHallId, ShowtimeRequest showtimeRequest) {
@@ -36,5 +46,66 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         Showtime savedShowtime = showtimeRepository.save(showtime);
 
         return showtimeMapper.toShowtimeResponse(savedShowtime);
+    }
+
+    @Override
+    public void createShowTime(ShowTimeRequestCreate requestCreate) {
+        if (requestCreate.getMovieId() != null
+                && requestCreate.getDateCreate() != null
+                && requestCreate.getTimeSheet() != null) {
+            Movie movie = movieRepository.findById(requestCreate.getMovieId())
+                    .orElseThrow(() -> new RuntimeException("Movie not found"));
+            List<Showtime> showTimes = new ArrayList<>();
+            for (DetailShowTime d : requestCreate.getTimeSheet()){
+                showTimes.add(
+                        Showtime
+                                .builder()
+                                .cinemaHall(cinemaHallRepository.findById(d.getRoomId())
+                                        .orElseThrow(() -> new RuntimeException("Room not found")))
+                                .movie(movie)
+                                .dateCreate(requestCreate.getDateCreate())
+                                .startTime(d.getTimeStart())
+                                .endTime(d.getTimeStart().plusMinutes(ConvertStringToInt(movie.getDuration())))
+                                .build()
+                );
+            }
+            showtimeRepository.saveAll(showTimes);
+        } else {
+            throw new RuntimeException("Data from request must not null");
+        }
+    }
+
+    @Override
+    public void updateShowTime(String showTimeId, String roomId) {
+        Showtime showtime = showtimeRepository.findById(showTimeId).orElseThrow(() -> new RuntimeException("ShowTime not found"));
+        showtime.setCinemaHall(cinemaHallRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found")));
+        showtimeRepository.save(showtime);
+    }
+
+    @Override
+    public void deleteShowTime(String showTimeId) {
+        Showtime showtime = showtimeRepository.findById(showTimeId).orElseThrow(() -> new RuntimeException("Show time not found"));
+        List<Ticket> ticket = bookingRepository.findByShowtime(showtime);
+        if (ticket.isEmpty()) {
+           showtimeRepository.delete(showtime);
+        } else {
+            throw new RuntimeException("Showtime has been booked, can not delete");
+        }
+    }
+
+    @Override
+    public List<?> getListShowTime(String date) {
+        if (date == null || date.isEmpty()) {
+            LocalDate today = LocalDate.now();
+            return showtimeRepository.findByStartTimeContainingOrderByMovie(today.toString() + "%");
+        }
+        else{
+            return showtimeRepository.findByStartTimeContainingOrderByMovie(date + '%');
+        }
+    }
+
+    //    Function additional
+    private int ConvertStringToInt(String s){
+        return Integer.parseInt(s.split(" ")[0]);
     }
 }

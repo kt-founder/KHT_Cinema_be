@@ -5,18 +5,15 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ShowTimeRequestCreate {
+public class DetailShowTime {
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String movieId;
+    LocalDateTime timeStart;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    LocalDateTime dateCreate;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    List<DetailShowTime> timeSheet;
+    String roomId;
 }
