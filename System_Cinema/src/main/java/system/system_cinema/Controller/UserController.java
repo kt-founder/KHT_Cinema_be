@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/account")
+//@CrossOrigin("http://localhost:3000")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
@@ -65,10 +66,10 @@ public class UserController {
                     .build();
         }
     }
-    @DeleteMapping("/lock-account")
-    public ApiResponse<?> lockAccount(@RequestBody OneFieldRequest oneFieldRequest) {
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<?> lockAccount(@PathVariable String id) {
         try {
-            userServiceImp.ActivateUser(oneFieldRequest.getInput());
+            userServiceImp.ActivateUser(id);
             return ApiResponse.builder()
                     .message("Successful")
                     .build();

@@ -1,5 +1,6 @@
 package system.system_cinema.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,5 +22,8 @@ public class CinemaHall {
     private boolean isActive;
     @OneToMany(mappedBy = "cinemaHall", cascade = CascadeType.ALL)
     private List<Seat> seats;
+    @OneToMany(mappedBy = "cinemaHall", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Showtime> showtimes;
 
 }

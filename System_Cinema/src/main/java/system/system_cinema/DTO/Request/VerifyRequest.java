@@ -1,16 +1,13 @@
-package system.system_cinema.DTO.Response;
+package system.system_cinema.DTO.Request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OTP_Response {
-    LocalDateTime expiration;
-    String id, code;
+public class VerifyRequest {
+    String username, email;
 }

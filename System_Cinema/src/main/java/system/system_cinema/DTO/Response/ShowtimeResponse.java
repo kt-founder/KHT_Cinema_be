@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OTP_Response {
-    LocalDateTime expiration;
-    String id, code;
+public class ShowtimeResponse {
+    String id;
+    String movieTitle;        // Tên phim
+    LocalDateTime startTime;  // Giờ bắt đầu chiếu
+    LocalDateTime endTime;    // Giờ kết thúc chiếu
 }

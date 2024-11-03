@@ -59,7 +59,7 @@ public class MailService {
     private  String generateRandomNumber() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 5; i++) {
             sb.append(random.nextInt(10));
         }
         return sb.toString();
