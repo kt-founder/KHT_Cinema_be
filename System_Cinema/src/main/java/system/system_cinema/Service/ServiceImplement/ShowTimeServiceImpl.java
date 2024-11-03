@@ -15,7 +15,7 @@ import system.system_cinema.Repository.BookingRepository;
 import system.system_cinema.Repository.CinemaHallRepository;
 import system.system_cinema.Repository.MovieRepository;
 import system.system_cinema.Repository.ShowTimeRepository;
-import system.system_cinema.Service.ShowtimeService;
+import system.system_cinema.Service.ShowTimeService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ShowTimeServiceImpl implements ShowtimeService {
+public class ShowTimeServiceImpl implements ShowTimeService {
 
     private final CinemaHallRepository cinemaHallRepository;
     private final MovieRepository movieRepository;

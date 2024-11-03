@@ -8,7 +8,7 @@ import system.system_cinema.DTO.Request.ShowTimeRequestCreate;
 import system.system_cinema.DTO.Request.ShowtimeRequest;
 import system.system_cinema.DTO.ApiResponse;
 import system.system_cinema.DTO.Response.ShowtimeResponse;
-import system.system_cinema.Service.ShowtimeService;
+import system.system_cinema.Service.ShowTimeService;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShowtimeController {
-    final ShowtimeService showtimeService;
+    final ShowTimeService showtimeService;
 
     @PostMapping("/create/{cinemaHallId}")
     public ApiResponse<ShowtimeResponse> createShowtime(@PathVariable String cinemaHallId, @RequestBody ShowtimeRequest showtimeRequest) {
