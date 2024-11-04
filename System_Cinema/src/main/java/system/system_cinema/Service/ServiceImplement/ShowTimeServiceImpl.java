@@ -94,13 +94,14 @@ public class ShowTimeServiceImpl implements ShowTimeService {
 
     @Override
     public List<?> getListShowTime(String date) {
+        LocalDate today;
         if (date == null || date.isEmpty()) {
-            LocalDate today = LocalDate.now();
-            return showtimeRepository.findByStartTimeContainingOrderByMovie(today.toString() + "%");
+            today = LocalDate.now();
         }
         else{
-            return showtimeRepository.findByStartTimeContainingOrderByMovie(date + '%');
+            today = LocalDate.parse(date);
         }
+        return showtimeRepository.findByStartTimeContainingOrderByMovie(today);
     }
 
     //    Function additional
