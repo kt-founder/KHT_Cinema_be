@@ -13,6 +13,7 @@ import system.system_cinema.Repository.MovieRepository;
 import system.system_cinema.Repository.ShowTimeRepository;
 import system.system_cinema.Service.CinemaHallService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,5 +67,21 @@ public class CinemaHallServiceImpl implements CinemaHallService {
         showtimeRepository.save(showtime);
 
         return cinemaHallMapper.toCinemaHallResponse(cinemaHall);
+    }
+
+    @Override
+    public List<CinemaHallResponse> checkAvailability(LocalDateTime time) {
+        List<Showtime> ongoingShowtimes = showtimeRepository.findByEndTimeAfter(time);
+
+        // Lấy danh sách các phòng đang có suất chiếu tại thời điểm được cung cấp
+        List<CinemaHall> occupiedRooms = ongoingShowtimes.stream()
+                .map(Showtime::getCinemaHall)
+                .distinct()
+                .toList();
+
+        // Tìm các phòng không có suất chiếu nào đang diễn ra hoặc sắp diễn ra sau thời điểm đó
+        return cinemaHallRepository.findAll().stream()
+                .filter(room -> !occupiedRooms.contains(room))
+                .toList().stream().map(cinemaHallMapper::toCinemaHallResponse).toList();
     }
 }

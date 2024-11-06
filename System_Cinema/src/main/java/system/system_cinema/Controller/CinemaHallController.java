@@ -10,6 +10,7 @@ import system.system_cinema.DTO.ApiResponse;
 import system.system_cinema.DTO.Response.CinemaHallResponse;
 import system.system_cinema.Service.CinemaHallService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -70,6 +71,19 @@ public class CinemaHallController {
                     .build();
         } catch (Exception e) {
             return ApiResponse.<CinemaHallResponse>builder()
+                    .error(e.getMessage())
+                    .build();
+        }
+    }
+    @GetMapping("/check-avaiable-room")
+    public ApiResponse<List<CinemaHallResponse>> checkAvailableRoom(@RequestParam LocalDateTime time ) {
+        try {
+            return ApiResponse.<List<CinemaHallResponse>>builder()
+                    .message("Showtime added successfully")
+                    .data(cinemaHallService.checkAvailability(time))
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<List<CinemaHallResponse>>builder()
                     .error(e.getMessage())
                     .build();
         }

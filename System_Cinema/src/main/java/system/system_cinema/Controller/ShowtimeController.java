@@ -3,6 +3,7 @@ package system.system_cinema.Controller;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import system.system_cinema.DTO.Request.ShowTimeRequestCreate;
 import system.system_cinema.DTO.Request.ShowtimeRequest;
@@ -10,6 +11,8 @@ import system.system_cinema.DTO.ApiResponse;
 import system.system_cinema.DTO.Response.ShowtimeResponse;
 import system.system_cinema.Service.ShowTimeService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -60,10 +63,27 @@ public class ShowtimeController {
         }
     }
     @GetMapping("/admin/get-list")
-    public ApiResponse<?> GetShowTimeCtr(@RequestParam String date){
+    public ApiResponse<?> GetShowTimeCtr(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date
+    ) {
+        System.out.println(date);
         try {
             return ApiResponse.<List<?>>builder()
                     .data(showtimeService.getListShowTime(date))
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<ShowtimeResponse>builder()
+                    .error(e.getMessage())
+                    .build();
+        }
+    }
+
+    @GetMapping("/admin/get-all-showtime")
+    public ApiResponse<?> GetAll(
+    ) {
+        try {
+            return ApiResponse.<List<?>>builder()
+                    .data(showtimeService.getAllShowTimes())
                     .build();
         } catch (Exception e) {
             return ApiResponse.<ShowtimeResponse>builder()

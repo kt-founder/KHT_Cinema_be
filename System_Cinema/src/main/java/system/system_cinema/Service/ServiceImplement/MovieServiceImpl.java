@@ -63,4 +63,9 @@ public class MovieServiceImpl implements MovieService {
         movie.setActive(!movie.isActive());
         movieRepository.save(movie);
     }
+
+    @Override
+    public List<MovieResponse> searchMovie(String keyWords) {
+        return movieRepository.findByTitleContainingIgnoreCase(keyWords).stream().map(movieMapper::toMovieResponse).collect(Collectors.toList());
+    }
 }

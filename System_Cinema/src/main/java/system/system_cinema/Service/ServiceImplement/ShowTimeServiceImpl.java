@@ -1,6 +1,7 @@
 package system.system_cinema.Service.ServiceImplement;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import system.system_cinema.DTO.Request.DetailShowTime;
 import system.system_cinema.DTO.Request.ShowTimeRequestCreate;
@@ -18,6 +19,8 @@ import system.system_cinema.Repository.ShowTimeRepository;
 import system.system_cinema.Service.ShowTimeService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,11 +53,11 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     @Override
     public void createShowTime(ShowTimeRequestCreate requestCreate) {
         if (requestCreate.getMovieId() != null
-                && requestCreate.getDateCreate() != null
                 && requestCreate.getTimeSheet() != null) {
             Movie movie = movieRepository.findById(requestCreate.getMovieId())
                     .orElseThrow(() -> new RuntimeException("Movie not found"));
             List<Showtime> showTimes = new ArrayList<>();
+            LocalDateTime today = LocalDateTime.now();
             for (DetailShowTime d : requestCreate.getTimeSheet()){
                 showTimes.add(
                         Showtime
@@ -62,7 +65,7 @@ public class ShowTimeServiceImpl implements ShowTimeService {
                                 .cinemaHall(cinemaHallRepository.findById(d.getRoomId())
                                         .orElseThrow(() -> new RuntimeException("Room not found")))
                                 .movie(movie)
-                                .dateCreate(requestCreate.getDateCreate())
+                                .dateCreate(today)
                                 .startTime(d.getTimeStart())
                                 .endTime(d.getTimeStart().plusMinutes(ConvertStringToInt(movie.getDuration())))
                                 .build()
@@ -93,15 +96,15 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public List<?> getListShowTime(String date) {
-        LocalDate today;
-        if (date == null || date.isEmpty()) {
-            today = LocalDate.now();
-        }
-        else{
-            today = LocalDate.parse(date);
-        }
-        return showtimeRepository.findByStartTimeContainingOrderByMovie(today);
+    public List<?> getListShowTime(LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return showtimeRepository.findByStartTimeBetweenOrderByMovie(startOfDay, endOfDay);
+    }
+
+    @Override
+    public List<?> getAllShowTimes() {
+        return showtimeRepository.findAll(Sort.by("startTime").descending());
     }
 
     //    Function additional
