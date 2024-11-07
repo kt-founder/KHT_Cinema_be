@@ -4,6 +4,7 @@ import system.system_cinema.DTO.Request.CinemaHallRequest;
 import system.system_cinema.DTO.Request.ShowtimeRequest;
 import system.system_cinema.DTO.Response.CinemaHallResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CinemaHallService {
@@ -11,4 +12,5 @@ public interface CinemaHallService {
     List<CinemaHallResponse> getAllCinemaHalls();
     CinemaHallResponse changeCinemaHallStatus(String id, boolean isActive);
     CinemaHallResponse addShowtime(String cinemaHallId, ShowtimeRequest showtimeRequest);
+    List<CinemaHallResponse> checkAvailability(LocalDateTime time);
 }
