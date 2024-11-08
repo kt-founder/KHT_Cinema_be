@@ -16,6 +16,7 @@ public class CommentMapper {
                 .id(comment.getId())
                 .userId(comment.getUser().getId())
                 .movieId(comment.getMovie().getId())
+                .username(comment.getUser().getUsername())
                 .content(comment.getContent())
                 .rate(comment.getRate())  // Bao gồm trường đánh giá
                 .createdAt(comment.getCreatedAt())
@@ -31,6 +32,7 @@ public class CommentMapper {
                 .content(commentRequest.getContent())
                 .rate(commentRequest.getRate())  // Bao gồm trường đánh giá
                 .parentComment(parentComment)
+                .username(commentRequest.getUsername())
                 .createdAt(LocalDateTime.now())
                 .build();
     }

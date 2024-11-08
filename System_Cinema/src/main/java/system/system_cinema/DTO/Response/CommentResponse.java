@@ -16,6 +16,7 @@ public class CommentResponse {
     String userId;
     String movieId;
     String content;
+    String username;
     int rate;  // Thêm trường đánh giá
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
