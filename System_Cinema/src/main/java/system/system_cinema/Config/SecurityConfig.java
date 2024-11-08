@@ -44,7 +44,7 @@ import java.security.Key;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] WHITE_LIST = {"/auth/**","/swagger-ui/**","/v3/**","/movies/**","/cinema-halls/**","showtimes/**"};
+    private final String[] WHITE_LIST = {"/auth/**","/swagger-ui/**","/v3/**","/movies/**","/cinema-halls/**","showtimes/**","comments/**"};
     @Value("${jwt.signerKey}")
     private String signerKey;
     private final UserRepository userRepository;
@@ -62,17 +62,17 @@ public class SecurityConfig {
 //            }
 //        };
 //    }
-@Bean
-public CorsFilter corsFilter() {
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowCredentials(true); // Cho phép credentials như token, cookie
-    config.addAllowedOrigin("http://localhost:3000"); // Chỉ cho phép từ frontend
-    config.addAllowedHeader("*"); // Cho phép tất cả các headers
-    config.addAllowedMethod("*"); // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE)
-    source.registerCorsConfiguration("/**", config);
-    return new CorsFilter(source);
-}
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true); // Cho phép credentials như token, cookie
+        config.addAllowedOrigin("http://localhost:3000"); // Chỉ cho phép từ frontend
+        config.addAllowedHeader("*"); // Cho phép tất cả các headers
+        config.addAllowedMethod("*"); // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE)
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 
     private UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
