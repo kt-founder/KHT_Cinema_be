@@ -18,7 +18,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentController {
     final CommentService commentService;
-    @PreAuthorize("hasRole('USER')")
     @PostMapping("/add/{userId}")
     public ApiResponse<CommentResponse> addComment(@PathVariable String userId, @RequestBody CommentRequest commentRequest) {
         try {
@@ -61,7 +60,6 @@ public class CommentController {
         }
     }
 
-    @PreAuthorize("hasRole('USER')")
     @PutMapping("/update/{commentId}")
     public ApiResponse<CommentResponse> updateComment(@PathVariable String commentId, @RequestParam String newContent, @RequestParam int rate) {
         try {
@@ -76,7 +74,6 @@ public class CommentController {
         }
     }
 
-    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/delete/{commentId}")
     public ApiResponse<?> deleteComment(@PathVariable String commentId) {
         try {

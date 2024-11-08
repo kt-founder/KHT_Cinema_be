@@ -12,5 +12,6 @@ public class CommentRequest {
     String movieId;
     String content;
     String parentCommentId;
+    String username;
     int rate;  // Thêm trường đánh giá
 }
