@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Data
 @Entity
 @Builder
@@ -16,7 +17,7 @@ import java.util.List;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String  id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -36,13 +37,14 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private int rate;  // Thêm trường đánh giá
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
-
-    // Getters và Setters
 
     @PreUpdate
     public void setLastUpdate() {

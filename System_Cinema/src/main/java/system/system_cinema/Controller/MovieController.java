@@ -89,4 +89,17 @@ public class MovieController {
                     .build();
         }
     }
+
+    @GetMapping("/search-movie")
+    public ApiResponse<List<MovieResponse>> searchMovie(@RequestParam String keyword) {
+        try {
+            return ApiResponse.<List<MovieResponse>>builder()
+                    .data(movieService.searchMovie(keyword))
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<List<MovieResponse>>builder()
+                    .error(e.getMessage())
+                    .build();
+        }
+    }
 }

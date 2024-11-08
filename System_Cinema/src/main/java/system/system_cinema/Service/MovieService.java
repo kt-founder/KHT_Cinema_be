@@ -11,4 +11,5 @@ public interface MovieService {
     MovieResponse createMovie(MovieRequest movieRequest);
     MovieResponse updateMovie(String id, MovieRequest movieRequest);
     void deleteMovie(String id);
+    List<MovieResponse> searchMovie(String keyWords);
 }

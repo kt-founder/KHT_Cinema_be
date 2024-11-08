@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, String> {
-    List<Movie> findByTitleContaining(String title);  // Tìm kiếm phim theo tiêu đề
+    List<Movie> findByTitleContainingIgnoreCase(String title);  // Tìm kiếm phim theo tiêu đề
 }
