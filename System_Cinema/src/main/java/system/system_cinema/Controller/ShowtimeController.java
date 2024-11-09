@@ -17,6 +17,7 @@ import system.system_cinema.Service.ShowTimeService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/showtimes")
@@ -74,11 +75,11 @@ public class ShowtimeController {
     ) {
         System.out.println(date);
         try {
-            return ApiResponse.<List<?>>builder()
+            return ApiResponse.<Map<String, List<String>>>builder()
                     .data(showtimeService.getListShowTime(date))
                     .build();
         } catch (Exception e) {
-            return ApiResponse.<ShowtimeResponse>builder()
+            return ApiResponse.<Map<String, List<String>>>builder()
                     .error(e.getMessage())
                     .build();
         }
