@@ -2,6 +2,7 @@ package system.system_cinema.Mapper;
 
 import org.springframework.stereotype.Component;
 import system.system_cinema.DTO.Request.ShowtimeRequest;
+import system.system_cinema.DTO.Response.ShowTimeAndRoomResponse;
 import system.system_cinema.DTO.Response.ShowtimeResponse;
 import system.system_cinema.Model.Movie;
 import system.system_cinema.Model.Showtime;
@@ -26,6 +27,16 @@ public class ShowtimeMapper {
                 .startTime(showtimeRequest.getStartTime())
                 .endTime(showtimeRequest.getEndTime())
                 .dateCreate(LocalDateTime.now())  // Thời gian tạo hiện tại
+                .build();
+    }
+    public ShowTimeAndRoomResponse convertShowTimeClean(Showtime showtime){
+        return ShowTimeAndRoomResponse.builder()
+                .id(showtime.getId())
+                .dateCreate(showtime.getDateCreate())
+                .startTime(showtime.getStartTime())
+                .endTime(showtime.getEndTime())
+                .roomId(showtime.getCinemaHall().getId())
+                .nameRoom(showtime.getCinemaHall().getName())
                 .build();
     }
 }
