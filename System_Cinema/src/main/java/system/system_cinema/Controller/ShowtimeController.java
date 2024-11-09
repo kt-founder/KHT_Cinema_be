@@ -9,6 +9,9 @@ import system.system_cinema.DTO.Request.ShowTimeRequestCreate;
 import system.system_cinema.DTO.Request.ShowtimeRequest;
 import system.system_cinema.DTO.ApiResponse;
 import system.system_cinema.DTO.Response.ShowtimeResponse;
+import system.system_cinema.Mapper.ShowtimeMapper;
+import system.system_cinema.Repository.MovieRepository;
+import system.system_cinema.Repository.ShowTimeRepository;
 import system.system_cinema.Service.ShowTimeService;
 
 import java.time.LocalDate;
@@ -21,6 +24,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ShowtimeController {
     final ShowTimeService showtimeService;
+    private final ShowTimeRepository showTimeRepository;
+    private final MovieRepository movieRepository;
+    private final ShowtimeMapper showtimeMapper;
 
     @PostMapping("/create/{cinemaHallId}")
     public ApiResponse<ShowtimeResponse> createShowtime(@PathVariable String cinemaHallId, @RequestBody ShowtimeRequest showtimeRequest) {
@@ -105,4 +111,19 @@ public class ShowtimeController {
         }
     }
 //    For user
+    @GetMapping("/user/get-by-movieid")
+    public ApiResponse<List<?>> GetShowTimeByMovieId(@RequestParam String movieId){
+        try {
+
+            return ApiResponse.<List<?>>builder()
+                    .data(showTimeRepository.findByMovie(movieRepository.findById(movieId).orElseThrow())
+                            .stream()
+                            .map(showtimeMapper::convertShowTimeClean).toList())
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<List<?>>builder()
+                    .error(e.getMessage())
+                    .build();
+        }
+    }
 }
