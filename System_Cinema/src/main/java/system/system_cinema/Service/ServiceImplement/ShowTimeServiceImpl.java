@@ -21,8 +21,8 @@ import system.system_cinema.Service.ShowTimeService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -96,10 +96,22 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public List<?> getListShowTime(LocalDate date) {
+    public Map<String, List<String>> getListShowTime(LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
-        return showtimeRepository.findByStartTimeBetweenOrderByMovie(startOfDay, endOfDay);
+        List<Showtime> showTimes = showtimeRepository.findByStartTimeBetweenOrderByMovie(startOfDay, endOfDay);
+        return showTimes.stream()
+                .collect(Collectors.groupingBy(
+                        showtime -> showtime.getMovie().getTitle(),
+                        Collectors.mapping(
+                                showtime -> String.format("%02d:%02d - %s",
+                                        showtime.getStartTime().getHour(),
+                                        showtime.getStartTime().getMinute(),
+                                        showtime.getCinemaHall().getName()
+                                ),
+                                Collectors.toList()
+                        )
+                ));
     }
 
     @Override

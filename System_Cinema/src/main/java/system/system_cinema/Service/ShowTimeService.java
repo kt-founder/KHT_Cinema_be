@@ -7,12 +7,13 @@ import system.system_cinema.DTO.Response.ShowtimeResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface ShowTimeService {
     ShowtimeResponse createShowtime(String cinemaHallId, ShowtimeRequest showtimeRequest);
     void createShowTime(ShowTimeRequestCreate requestCreate);
     void updateShowTime(String showTimeId, String roomId);
     void deleteShowTime(String showTimeId);
-    List<?> getListShowTime(LocalDate date);
+    Map<String, List<String>> getListShowTime(LocalDate date);
     List<?> getAllShowTimes();
 }
