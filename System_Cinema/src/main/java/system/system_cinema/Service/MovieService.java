@@ -12,4 +12,5 @@ public interface MovieService {
     MovieResponse updateMovie(String id, MovieRequest movieRequest);
     void deleteMovie(String id);
     List<MovieResponse> searchMovie(String keyWords);
+    MovieResponse getMovieWithAverageRating(String id);
 }

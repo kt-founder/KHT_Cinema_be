@@ -11,4 +11,5 @@ public interface CommentService {
     List<CommentResponse> getCommentsByMovie(String movieId);
     CommentResponse updateComment(String commentId, String newContent, int rate);
     void deleteComment(String commentId);
+    CommentResponse replyToComment(String userId, String parentCommentId, CommentRequest commentRequest); // Thêm phương thức mới
 }

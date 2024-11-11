@@ -21,4 +21,5 @@ public class MovieResponse {
     LocalDate releaseDate;
     String image;
     boolean isActive;
+    Double averageRating;
 }

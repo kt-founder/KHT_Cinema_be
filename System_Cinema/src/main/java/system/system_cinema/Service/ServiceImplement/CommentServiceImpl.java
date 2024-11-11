@@ -13,6 +13,7 @@ import system.system_cinema.Repository.MovieRepository;
 import system.system_cinema.Repository.UserRepository;
 import system.system_cinema.Service.CommentService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setUser(user);
         comment.setMovie(movie);
         comment.setRate(commentRequest.getRate());  // Thiết lập rate cho bình luận
+        comment.setCreatedAt(LocalDateTime.now());
 
         Comment savedComment = commentRepository.save(comment);
         return commentMapper.toCommentResponse(savedComment);
@@ -73,6 +75,21 @@ public class CommentServiceImpl implements CommentService {
 
         Comment updatedComment = commentRepository.save(comment);
         return commentMapper.toCommentResponse(updatedComment);
+    }
+    @Override
+    public CommentResponse replyToComment(String userId, String parentCommentId, CommentRequest commentRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Comment parentComment = commentRepository.findById(parentCommentId)
+                .orElseThrow(() -> new RuntimeException("Parent comment not found"));
+
+        Comment replyComment = commentMapper.toComment(commentRequest, parentComment);
+        replyComment.setUser(user);
+        replyComment.setMovie(parentComment.getMovie()); // Gán cùng phim với bình luận cha
+
+        Comment savedReplyComment = commentRepository.save(replyComment);
+        return commentMapper.toCommentResponse(savedReplyComment);
     }
 
     @Override

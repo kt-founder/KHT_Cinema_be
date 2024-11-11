@@ -48,6 +48,19 @@ public class MovieController {
         }
     }
 
+    @GetMapping("/get-average-rating/{id}")
+    public ApiResponse<MovieResponse> getMovieWithAverageRating(@PathVariable String id) {
+        try {
+            return ApiResponse.<MovieResponse>builder()
+                    .message("Successful")
+                    .data(movieService.getMovieWithAverageRating(id))
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<MovieResponse>builder()
+                    .error(e.getMessage())
+                    .build();
+        }
+    }
     @PostMapping("/create")
     public ApiResponse<MovieResponse> createMovie(@RequestBody MovieRequest movieRequest) {
         try {
