@@ -8,6 +8,7 @@ import system.system_cinema.Mapper.MovieMapper;
 import system.system_cinema.Model.Movie;
 import system.system_cinema.Repository.MovieRepository;
 import system.system_cinema.Service.MovieService;
+import system.system_cinema.Model.Comment;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,17 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieResponse> getAllMovies() {
         return movieRepository.findAll().stream()
-                .map(movieMapper::toMovieResponse)
+                .map(movie -> {
+                    double averageRating = movie.getComments().stream()
+                            .filter(comment -> comment.getParentComment() == null)
+                            .mapToInt(Comment::getRate)
+                            .average()
+                            .orElse(0.0);
+
+                    MovieResponse movieResponse = movieMapper.toMovieResponse(movie);
+                    movieResponse.setAverageRating(averageRating); // Thiết lập averageRating
+                    return movieResponse;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -67,5 +78,22 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<MovieResponse> searchMovie(String keyWords) {
         return movieRepository.findByTitleContainingIgnoreCase(keyWords).stream().map(movieMapper::toMovieResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public MovieResponse getMovieWithAverageRating(String id) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+
+        // Tính toán trung bình đánh giá dựa trên các bình luận
+        double averageRating = movie.getComments().stream()
+                .filter(comment -> comment.getParentComment() == null) // Only root comments
+                .mapToInt(Comment::getRate)
+                .average()
+                .orElse(0.0);
+
+        MovieResponse movieResponse = movieMapper.toMovieResponse(movie);
+        movieResponse.setAverageRating(averageRating);  // Cập nhật điểm đánh giá trung bình vào MovieResponse
+        return movieResponse;
     }
 }

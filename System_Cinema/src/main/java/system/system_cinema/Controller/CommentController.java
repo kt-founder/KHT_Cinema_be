@@ -74,6 +74,24 @@ public class CommentController {
         }
     }
 
+    @PostMapping("/reply/{userId}/{parentCommentId}")
+    public ApiResponse<CommentResponse> replyToComment(
+            @PathVariable String userId,
+            @PathVariable String parentCommentId,
+            @RequestBody CommentRequest commentRequest) {
+        try {
+            CommentResponse replyResponse = commentService.replyToComment(userId, parentCommentId, commentRequest);
+            return ApiResponse.<CommentResponse>builder()
+                    .message("Reply added successfully")
+                    .data(replyResponse)
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<CommentResponse>builder()
+                    .error(e.getMessage())
+                    .build();
+        }
+    }
+
     @DeleteMapping("/delete/{commentId}")
     public ApiResponse<?> deleteComment(@PathVariable String commentId) {
         try {
