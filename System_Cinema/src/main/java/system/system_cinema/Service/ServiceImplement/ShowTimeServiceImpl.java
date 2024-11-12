@@ -1,11 +1,15 @@
 package system.system_cinema.Service.ServiceImplement;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import system.system_cinema.DTO.Request.DetailShowTime;
 import system.system_cinema.DTO.Request.ShowTimeRequestCreate;
 import system.system_cinema.DTO.Request.ShowtimeRequest;
+import system.system_cinema.DTO.Response.ShowTimeAndRoomResponse;
 import system.system_cinema.DTO.Response.ShowtimeResponse;
 import system.system_cinema.Mapper.ShowtimeMapper;
 import system.system_cinema.Model.CinemaHall;
@@ -115,8 +119,17 @@ public class ShowTimeServiceImpl implements ShowTimeService {
     }
 
     @Override
-    public List<?> getAllShowTimes() {
-        return showtimeRepository.findAll(Sort.by("startTime").descending());
+    public Map<String, Object> getAllShowTimes(int page) {
+        Pageable pageable = PageRequest.of(page, 8, Sort.by("dateCreate").descending());
+        Page<Showtime> pageShowtime = showtimeRepository.findAll(pageable);
+        List<ShowTimeAndRoomResponse> showTimes = pageShowtime.getContent().stream().map(showtimeMapper::convertShowTimeCleanAdmin).toList();
+        int totalPages = pageShowtime.getTotalPages();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("showtime", showTimes);
+        response.put("totalPages", totalPages);
+        response.put("currentPage", pageShowtime.getNumber());
+        return response;
     }
 
     //    Function additional

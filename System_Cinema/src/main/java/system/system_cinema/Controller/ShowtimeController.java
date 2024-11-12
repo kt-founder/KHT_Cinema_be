@@ -86,11 +86,10 @@ public class ShowtimeController {
     }
 
     @GetMapping("/admin/get-all-showtime")
-    public ApiResponse<?> GetAll(
-    ) {
+    public ApiResponse<?> GetAll(@RequestParam int page) {
         try {
-            return ApiResponse.<List<?>>builder()
-                    .data(showtimeService.getAllShowTimes())
+            return ApiResponse.<Map<?,?>>builder()
+                    .data(showtimeService.getAllShowTimes(page))
                     .build();
         } catch (Exception e) {
             return ApiResponse.<ShowtimeResponse>builder()

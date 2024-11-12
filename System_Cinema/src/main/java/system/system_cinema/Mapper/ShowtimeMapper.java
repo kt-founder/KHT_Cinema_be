@@ -39,4 +39,15 @@ public class ShowtimeMapper {
                 .nameRoom(showtime.getCinemaHall().getName())
                 .build();
     }
+    public ShowTimeAndRoomResponse convertShowTimeCleanAdmin(Showtime showtime){
+        return ShowTimeAndRoomResponse.builder()
+                .id(showtime.getId())
+                .dateCreate(showtime.getDateCreate())
+                .startTime(showtime.getStartTime())
+                .endTime(showtime.getEndTime())
+                .roomId(showtime.getCinemaHall().getId())
+                .nameRoom(showtime.getCinemaHall().getName())
+                .movie(showtime.getMovie().getTitle())
+                .build();
+    }
 }
