@@ -22,4 +22,6 @@ public class SeatBooking {
     @ManyToOne
     @JoinColumn(name = "ticket_id")
     private Ticket ticket; // Vé liên quan
+
+    String status;
 }

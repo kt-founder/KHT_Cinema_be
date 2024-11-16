@@ -15,5 +15,5 @@ public interface ShowTimeService {
     void updateShowTime(String showTimeId, String roomId);
     void deleteShowTime(String showTimeId);
     Map<String, List<String>> getListShowTime(LocalDate date);
-    List<?> getAllShowTimes();
+    Map<?,?> getAllShowTimes(int page);
 }

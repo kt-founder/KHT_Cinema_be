@@ -1,0 +1,46 @@
+jwt:
+    refreshable-duration: 36000
+    signerKey: '"b001328b299894e44aec0769bfb55e76f51c5dde2760ba4872d31833f85bd541"'
+    valid-duration: 3600
+spring:
+    application:
+        name: System_Cinema
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password: ulLJomEWfYBEUzUxkJyjwjKPDqtgHrAj
+        url: jdbc:mysql://junction.proxy.rlwy.net:14071/Database_SysCinema
+        username: root
+    jpa:
+        database: mysql
+        database-platform: org.hibernate.dialect.MySQLDialect
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                format_sql: true
+    mail:
+        from: SystemCinemaHKT
+        host: smtp.gmail.com
+        password: keba scfk yzbo forg
+        port: 587
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+        username: whowhohaha8@gmail.com
+    servlet:
+        multipart:
+            max-file-size: 50MB
+            max-request-size: 50MB
+
+payment:
+    vnPay:
+        url: abcd
+        tmnCode: 1234
+        secretKey: UQGQ9K12LBU6QPXXBQQX4FT6CJ3YSM4R
+        returnUrl: http://localhost:8080/payment/vn-pay-callback
+        version: 2.1.0
+        command: pay
+        orderType: other

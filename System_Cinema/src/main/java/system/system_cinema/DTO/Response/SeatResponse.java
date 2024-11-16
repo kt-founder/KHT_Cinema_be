@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SeatResponse {
-    private String id;
+    private String seatId;
     private String seatNumber;
-    private String cinemaHallId;
-    private String typeSeatId;
+    private String typeName;
+    private int seatPrice;
+    private String seatStatus;
 }
