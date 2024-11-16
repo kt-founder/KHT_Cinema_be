@@ -39,6 +39,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse getMovieById(String id) {
+
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
         return movieMapper.toMovieResponse(movie);

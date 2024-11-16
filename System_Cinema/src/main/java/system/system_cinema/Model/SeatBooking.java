@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Data
 @Entity
 @Builder
@@ -15,11 +13,13 @@ import java.util.List;
 public class SeatBooking {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+    private String id;
 
     @ManyToOne
-    Seat seats;
+    @JoinColumn(name = "seat_id")
+    private Seat seat; // Ghế được đặt
 
     @ManyToOne
-    Ticket ticket;
+    @JoinColumn(name = "ticket_id")
+    private Ticket ticket; // Vé liên quan
 }
