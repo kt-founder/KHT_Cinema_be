@@ -8,12 +8,7 @@ import system.system_cinema.Model.Seat;
 @Component
 public class SeatMapper {
     public SeatResponse toSeatResponse(Seat seat) {
-        SeatResponse response = new SeatResponse();
-        response.setId(seat.getId());
-        response.setSeatNumber(seat.getSeatNumber());
-        response.setCinemaHallId(seat.getCinemaHall().getId());
-        response.setTypeSeatId(seat.getTypeSeat().getId());
-        return response;
+        return new SeatResponse();
     }
 
     public Seat toSeat(SeatRequest request) {

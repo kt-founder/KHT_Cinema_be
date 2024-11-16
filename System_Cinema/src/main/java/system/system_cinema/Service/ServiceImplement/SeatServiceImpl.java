@@ -7,8 +7,10 @@ import system.system_cinema.DTO.Response.SeatResponse;
 import system.system_cinema.Mapper.SeatMapper;
 import system.system_cinema.Model.CinemaHall;
 import system.system_cinema.Model.Seat;
+import system.system_cinema.Model.SeatBooking;
 import system.system_cinema.Model.TypeSeat;
 import system.system_cinema.Repository.CinemaHallRepository;
+import system.system_cinema.Repository.SeatBookingRepository;
 import system.system_cinema.Repository.SeatRepository;
 import system.system_cinema.Repository.TypeSeatRepository;
 import system.system_cinema.Service.SeatService;
@@ -24,12 +26,11 @@ public class SeatServiceImpl implements SeatService {
     private final CinemaHallRepository cinemaHallRepository;
     private final TypeSeatRepository typeSeatRepository;
     private final SeatMapper seatMapper;
+    private final SeatBookingRepository seatBookingRepository;
 
     @Override
-    public List<SeatResponse> getSeatsByCinemaHall(String cinemaHallId) {
-        return seatRepository.findByCinemaHallId(cinemaHallId).stream()
-                .map(seatMapper::toSeatResponse)
-                .collect(Collectors.toList());
+    public List<SeatResponse> getSeatsByCinemaHall(String showTimeId) {
+        return seatRepository.findSeatsWithTypeAndStatusByShowTime(showTimeId);
     }
 
     @Override

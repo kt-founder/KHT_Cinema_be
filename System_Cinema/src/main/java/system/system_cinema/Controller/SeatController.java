@@ -21,12 +21,13 @@ public class SeatController {
     final SeatService seatService;
 
     // **User APIs**
-    @GetMapping("/get-by-room/{cinemaHallId}")
-    public ApiResponse<List<SeatResponse>> getSeatsByRoom(@PathVariable String cinemaHallId) {
+    // Get all seat in room by show time
+    @GetMapping("/get-by-show-time/{showtimeId}")
+    public ApiResponse<List<SeatResponse>> getSeatsByRoom(@PathVariable String showtimeId) {
         try {
             return ApiResponse.<List<SeatResponse>>builder()
                     .message("Successful")
-                    .data(seatService.getSeatsByCinemaHall(cinemaHallId))
+                    .data(seatService.getSeatsByCinemaHall(showtimeId))
                     .build();
         } catch (Exception e) {
             return ApiResponse.<List<SeatResponse>>builder()

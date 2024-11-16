@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SeatService {
 
-    List<SeatResponse> getSeatsByCinemaHall(String cinemaHallId);
+    List<SeatResponse> getSeatsByCinemaHall(String showTimeId);
 
     SeatResponse createSeat(SeatRequest request);
 
