@@ -38,7 +38,7 @@ spring:
 payment:
     vnPay:
         url: abcd
-        tmnCode: 1234
+        tmnCode: 123
         secretKey: UQGQ9K12LBU6QPXXBQQX4FT6CJ3YSM4R
         returnUrl: http://localhost:8080/payment/vn-pay-callback
         version: 2.1.0

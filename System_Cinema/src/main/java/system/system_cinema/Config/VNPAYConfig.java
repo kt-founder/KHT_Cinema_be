@@ -30,17 +30,18 @@ public class VNPAYConfig {
     @Value("${payment.vnPay.orderType}")
     private String orderType;
 
-    public Map<String, String> getVNPayConfig() {
+    public Map<String, String> getVNPayConfig(String ticketID) {
         Map<String, String> vnpParamsMap = new HashMap<>();
+        vnpParamsMap.put("vnp_BankCode", "NCB");
         vnpParamsMap.put("vnp_Version", this.vnp_Version);
         vnpParamsMap.put("vnp_Command", this.vnp_Command);
         vnpParamsMap.put("vnp_TmnCode", this.vnp_TmnCode);
         vnpParamsMap.put("vnp_CurrCode", "VND");
-        vnpParamsMap.put("vnp_TxnRef",  VNPayUtil.getRandomNumber(8));
-        vnpParamsMap.put("vnp_OrderInfo", "Thanh toan don hang:" +  VNPayUtil.getRandomNumber(8));
+        vnpParamsMap.put("vnp_TxnRef",  ticketID);
+        vnpParamsMap.put("vnp_OrderInfo", "Thanh toan don hang:" +  ticketID);
         vnpParamsMap.put("vnp_OrderType", this.orderType);
         vnpParamsMap.put("vnp_Locale", "vn");
-        vnpParamsMap.put("vnp_ReturnUrl", this.vnp_ReturnUrl);
+        vnpParamsMap.put("vnp_ReturnUrl", this.vnp_ReturnUrl + "?ticketID=" + ticketID);
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnpCreateDate = formatter.format(calendar.getTime());

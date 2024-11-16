@@ -6,8 +6,5 @@ import system.system_cinema.DTO.Response.SeatBookingResponse;
 import java.util.List;
 
 public interface SeatBookingService {
-
-    List<SeatBookingResponse> getSeatBookingsByTicket(String ticketId);
-
-    SeatBookingResponse createSeatBooking(SeatBookingRequest request);
+    boolean lockSeats(List<String> seatIds, String showtimeId, String userId);
 }
