@@ -25,6 +25,7 @@ public class Seat {
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall cinemaHall;
 
+
     @JsonIgnore
     @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
     private List<SeatBooking> seatBookings;
