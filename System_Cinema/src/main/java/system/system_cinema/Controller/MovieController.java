@@ -39,7 +39,7 @@ public class MovieController {
         try {
             return ApiResponse.<MovieResponse>builder()
                     .message("Successful")
-                    .data(movieService.getMovieWithAverageRating(id))
+                    .data(movieService.getMovieById(id))
                     .build();
         } catch (Exception e) {
             return ApiResponse.<MovieResponse>builder()

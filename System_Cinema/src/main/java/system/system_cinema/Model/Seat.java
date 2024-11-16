@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -26,10 +26,9 @@ public class Seat {
     private CinemaHall cinemaHall;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
-    private List<SeatBooking> seatBookings;
+    @OneToMany(mappedBy = "seats")
+    private Set<SeatBooking> seatBookings;
 
     @ManyToOne
-    @JoinColumn(name = "type_seat_id") // Thêm tên cột rõ ràng trong cơ sở dữ liệu
-    private TypeSeat typeSeat; // Đặt tên đúng để ánh xạ chính xác
+    TypeSeat typeSeats;
 }
