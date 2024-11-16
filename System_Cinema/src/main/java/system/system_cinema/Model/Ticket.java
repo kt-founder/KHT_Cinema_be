@@ -18,18 +18,18 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    int price;
-    boolean isPaid;
-    LocalDateTime dateBooking;
+    int price; // Tổng giá vé (dựa trên ghế đã đặt)
+    boolean isPaid; // Trạng thái thanh toán
+    LocalDateTime dateBooking; // Thời gian đặt vé
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User user;
+    User user; // Người đặt vé
 
     @ManyToOne
     @JoinColumn(name = "showtime_id")
-    Showtime showtime;
+    Showtime showtime; // Xuất chiếu
 
-    @OneToMany(mappedBy = "ticket")
-    List<SeatBooking> seatBookings;
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    List<SeatBooking> seatBookings; // Danh sách ghế trong vé
 }

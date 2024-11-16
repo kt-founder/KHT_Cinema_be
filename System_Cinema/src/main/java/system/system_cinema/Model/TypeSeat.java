@@ -17,9 +17,11 @@ public class TypeSeat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private int price;
+
+    String typeName; // Tên loại ghế (thêm vào theo yêu cầu trước đó)
+    int price;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "typeSeats")
-    private List<Seat> seats;
+    @OneToMany(mappedBy = "typeSeat", cascade = CascadeType.ALL)
+    private List<Seat> seats; // Đặt tên chính xác và đồng nhất
 }
