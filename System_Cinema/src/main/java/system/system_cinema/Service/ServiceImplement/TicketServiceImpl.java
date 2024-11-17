@@ -32,19 +32,4 @@ public class TicketServiceImpl implements TicketService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public TicketResponse createTicket(TicketRequest request) {
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Showtime showtime = showtimeRepository.findById(request.getShowtimeId())
-                .orElseThrow(() -> new RuntimeException("Showtime not found"));
-
-        Ticket ticket = ticketMapper.toTicket(request);
-        ticket.setUser(user);
-        ticket.setShowtime(showtime);
-
-        Ticket savedTicket = ticketRepository.save(ticket);
-        return ticketMapper.toTicketResponse(savedTicket);
-    }
 }

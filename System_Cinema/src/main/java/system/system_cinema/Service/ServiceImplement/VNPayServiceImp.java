@@ -56,11 +56,16 @@ public class VNPayServiceImp implements VNPayService {
         Ticket ticket = Ticket
                 .builder()
                 .id(idTicket)
-                .user(userRepository.findByUsername(lockSeatsRequest.getUserId()).orElseThrow(()->new RuntimeException("user not found")))
-                .showtime(showTimeRepository.findById(lockSeatsRequest.getShowtimeId()).orElseThrow(() -> new RuntimeException("not found showtime")))
+                .user(userRepository.findByUsername(lockSeatsRequest.getUserId()).orElseThrow(() -> new RuntimeException("User not found")))
+                .showtime(showTimeRepository.findById(lockSeatsRequest.getShowtimeId()).orElseThrow(() -> new RuntimeException("Showtime not found")))
                 .price((int) amount)
-                .seatBookings(seatBookingRepository.saveAll(seatBookings))
+                .seatBookings(seatBookings) // Gắn danh sách SeatBooking vào Ticket
                 .build();
+
+        for (SeatBooking seatBooking : seatBookings) {
+            seatBooking.setTicket(ticket);
+        }
+
         bookingRepository.save(ticket);
 
         Map<String, String> vnpParamsMap = vnPayConfig.getVNPayConfig(idTicket);

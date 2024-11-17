@@ -5,10 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import system.system_cinema.DTO.ApiResponse;
 import system.system_cinema.DTO.Request.LockSeatsRequest;
 import system.system_cinema.Model.Ticket;
@@ -27,7 +24,7 @@ public class VNPayController {
     private final BookingRepository bookingRepository;
 
     @PostMapping("/vn-pay")
-    public ApiResponse<?> pay(HttpServletRequest request, LockSeatsRequest lockSeatsRequest) {
+    public ApiResponse<?> pay(HttpServletRequest request,@RequestBody LockSeatsRequest lockSeatsRequest) {
         System.out.println(lockSeatsRequest.getShowtimeId() + " " + lockSeatsRequest.getUserId());
         try {
             return ApiResponse
@@ -50,10 +47,10 @@ public class VNPayController {
             ticket.setDateBooking(LocalDateTime.now());
             ticket.setPaid(true);
             bookingRepository.save(ticket);
-            response.sendRedirect("http://localhost:8080/payment-success");
+            response.sendRedirect("http://localhost:3000/payment-success");
         } else {
             bookingRepository.deleteById(idTicket);
-            response.sendRedirect("http://localhost:8080/payment-failure");
+            response.sendRedirect("http://localhost:3000/payment-failure");
         }
     }
 }

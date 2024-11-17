@@ -9,7 +9,7 @@ import java.util.List;
 public interface SeatBookingRepository extends JpaRepository<SeatBooking, String> {
     List<SeatBooking> findByTicketId(String ticketId);
 
-    @Query( " select sb.status " +
+    @Query( " select sb " +
             " from SeatBooking sb" +
             " JOIN Seat s on sb.seat.id in :value1" +
             " JOIN Ticket t on sb.ticket.id = t.id" +

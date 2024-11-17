@@ -15,7 +15,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Ticket {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     int price; // Tổng giá vé (dựa trên ghế đã đặt)
