@@ -9,5 +9,4 @@ public interface TicketService {
 
     List<TicketResponse> getTicketsByUser(String userId);
 
-    TicketResponse createTicket(TicketRequest request);
 }

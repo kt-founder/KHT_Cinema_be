@@ -1,5 +1,6 @@
 package system.system_cinema.Service.ServiceImplement;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import system.system_cinema.DTO.Request.SeatBookingRequest;
@@ -19,32 +20,24 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SeatBookingServiceImpl implements SeatBookingService {
-
-    private final SeatBookingRepository seatBookingRepository;
-    private final SeatRepository seatRepository;
-    private final TicketRepository ticketRepository;
-    private final SeatBookingMapper seatBookingMapper;
-
+    SeatBookingRepository seatBookingRepository;
     @Override
-    public List<SeatBookingResponse> getSeatBookingsByTicket(String ticketId) {
-        return seatBookingRepository.findByTicketId(ticketId).stream()
-                .map(seatBookingMapper::toSeatBookingResponse)
-                .collect(Collectors.toList());
-    }
+    @Transactional
+    public boolean lockSeats(List<String> seatIds, String showtimeId, String userId) {
+        List<SeatBooking> existingSeats = seatBookingRepository.findBySeatIdInAndShowTimeId(seatIds, showtimeId);
 
-    @Override
-    public SeatBookingResponse createSeatBooking(SeatBookingRequest request) {
-        Seat seat = seatRepository.findById(request.getSeatId())
-                .orElseThrow(() -> new RuntimeException("Seat not found"));
+        for (SeatBooking seat : existingSeats) {
+            if ("sold".equals(seat.getStatus()) || "held".equals(seat.getStatus())) {
+                return false;
+            }
+        }
 
-        Ticket ticket = ticketRepository.findById(request.getTicketId())
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+        for (String seatId : seatIds) {
+            SeatBooking seatBooking = SeatBooking.builder().build();
+            seatBooking.setStatus("held");
+            seatBookingRepository.save(seatBooking);
+        }
 
-        SeatBooking seatBooking = seatBookingMapper.toSeatBooking(request);
-        seatBooking.setSeat(seat);
-        seatBooking.setTicket(ticket);
-
-        SeatBooking savedSeatBooking = seatBookingRepository.save(seatBooking);
-        return seatBookingMapper.toSeatBookingResponse(savedSeatBooking);
+        return true;
     }
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 import system.system_cinema.DTO.ApiResponse;
+import system.system_cinema.DTO.Request.LockSeatsRequest;
 import system.system_cinema.DTO.Request.SeatBookingRequest;
 import system.system_cinema.DTO.Response.SeatBookingResponse;
 import system.system_cinema.Service.SeatBookingService;
@@ -19,33 +20,27 @@ import java.util.List;
 public class SeatBookingController {
 
     final SeatBookingService seatBookingService;
-
-    // **User APIs**
-    @PostMapping("/create")
-    public ApiResponse<SeatBookingResponse> createSeatBooking(@RequestBody SeatBookingRequest seatBookingRequest) {
+    @PostMapping("/lock-seats")
+    public ApiResponse<?> lockSeats(@RequestBody LockSeatsRequest request) {
+        boolean allLocked = seatBookingService.lockSeats(request.getSeatIds(), request.getShowtimeId(), request.getUserId());
         try {
-            return ApiResponse.<SeatBookingResponse>builder()
-                    .message("Seat booked successfully")
-                    .data(seatBookingService.createSeatBooking(seatBookingRequest))
-                    .build();
+            if (allLocked) {
+                return ApiResponse
+                        .builder()
+                        .message("Seats locked successfully")
+                        .build();
+            } else {
+                return ApiResponse
+                        .builder()
+                        .message("Some seats are already held or sold")
+                        .build();
+            }
         } catch (Exception e) {
-            return ApiResponse.<SeatBookingResponse>builder()
-                    .error(e.getMessage())
+            return ApiResponse
+                    .builder()
+                    .message(e.getMessage())
                     .build();
         }
     }
 
-    @GetMapping("/get-by-ticket/{ticketId}")
-    public ApiResponse<List<SeatBookingResponse>> getSeatBookingsByTicket(@PathVariable String ticketId) {
-        try {
-            return ApiResponse.<List<SeatBookingResponse>>builder()
-                    .message("Successful")
-                    .data(seatBookingService.getSeatBookingsByTicket(ticketId))
-                    .build();
-        } catch (Exception e) {
-            return ApiResponse.<List<SeatBookingResponse>>builder()
-                    .error(e.getMessage())
-                    .build();
-        }
-    }
 }

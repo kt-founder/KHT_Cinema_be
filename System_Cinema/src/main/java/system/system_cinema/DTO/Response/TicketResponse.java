@@ -12,11 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketResponse {
-    private String id;
+    private String id, movie;
     private int price;
-    private boolean isPaid;
     private LocalDateTime dateBooking;
-    private String userId;
-    private String showtimeId;
+    private List<String> infoShowTime;
     private List<String> seatIds; // Danh sách các ghế liên quan
 }

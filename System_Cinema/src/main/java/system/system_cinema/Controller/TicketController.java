@@ -20,20 +20,6 @@ public class TicketController {
 
     final TicketService ticketService;
 
-    // **User APIs**
-    @PostMapping("/create")
-    public ApiResponse<TicketResponse> createTicket(@RequestBody TicketRequest ticketRequest) {
-        try {
-            return ApiResponse.<TicketResponse>builder()
-                    .message("Ticket created successfully")
-                    .data(ticketService.createTicket(ticketRequest))
-                    .build();
-        } catch (Exception e) {
-            return ApiResponse.<TicketResponse>builder()
-                    .error(e.getMessage())
-                    .build();
-        }
-    }
 
     @GetMapping("/get-by-user/{userId}")
     public ApiResponse<List<TicketResponse>> getTicketsByUser(@PathVariable String userId) {
