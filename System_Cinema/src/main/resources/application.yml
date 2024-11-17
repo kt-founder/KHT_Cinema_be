@@ -1,46 +1,47 @@
 jwt:
-    refreshable-duration: 36000
-    signerKey: '"b001328b299894e44aec0769bfb55e76f51c5dde2760ba4872d31833f85bd541"'
-    valid-duration: 3600
+    refreshable-duration: ${JWT_REFRESHABLE_DURATION}
+    signerKey: ${JWT_SIGNER_KEY}
+    valid-duration: ${JWT_VALID_DURATION}
+
 spring:
     application:
-        name: System_Cinema
+        name: ${SPRING_APPLICATION_NAME}
     datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        password: ulLJomEWfYBEUzUxkJyjwjKPDqtgHrAj
-        url: jdbc:mysql://junction.proxy.rlwy.net:14071/Database_SysCinema
-        username: root
+        driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+        password: ${SPRING_DATASOURCE_PASSWORD}
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${SPRING_DATASOURCE_USERNAME}
     jpa:
-        database: mysql
-        database-platform: org.hibernate.dialect.MySQLDialect
+        database: ${SPRING_JPA_DATABASE}
+        database-platform: ${SPRING_JPA_DATABASE_PLATFORM}
         hibernate:
-            ddl-auto: update
+            ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
         properties:
             hibernate:
-                format_sql: true
+                format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}
     mail:
-        from: SystemCinemaHKT
-        host: smtp.gmail.com
-        password: keba scfk yzbo forg
-        port: 587
+        from: ${SPRING_MAIL_FROM}
+        host: ${SPRING_MAIL_HOST}
+        password: ${SPRING_MAIL_PASSWORD}
+        port: ${SPRING_MAIL_PORT}
         properties:
             mail:
                 smtp:
-                    auth: true
+                    auth: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH}
                     starttls:
-                        enable: true
-        username: whowhohaha8@gmail.com
+                        enable: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE}
+        username: ${SPRING_MAIL_USERNAME}
     servlet:
         multipart:
-            max-file-size: 50MB
-            max-request-size: 50MB
+            max-file-size: ${SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE}
+            max-request-size: ${SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE}
 
 payment:
     vnPay:
-        url: abcd
-        tmnCode: 1234
-        secretKey: UQGQ9K12LBU6QPXXBQQX4FT6CJ3YSM4R
-        returnUrl: http://localhost:8080/payment/vn-pay-callback
-        version: 2.1.0
-        command: pay
-        orderType: other
+        url: ${PAYMENT_VNPAY_URL}
+        tmnCode: ${PAYMENT_VNPAY_TMN_CODE}
+        secretKey: ${PAYMENT_VNPAY_SECRET_KEY}
+        returnUrl: ${PAYMENT_VNPAY_RETURN_URL}
+        version: ${PAYMENT_VNPAY_VERSION}
+        command: ${PAYMENT_VNPAY_COMMAND}
+        orderType: ${PAYMENT_VNPAY_ORDER_TYPE}
