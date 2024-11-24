@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StatusTicket {
-    String id;
+    String id, movie, room;
     boolean status;
     long price;
     LocalDateTime time;
