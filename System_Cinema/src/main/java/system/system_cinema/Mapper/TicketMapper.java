@@ -38,6 +38,8 @@ public class TicketMapper {
         statusTicket.setPrice(ticket.getPrice());
         statusTicket.setStatus(ticket.isPaid());
         statusTicket.setTime(ticket.getDateBooking());
+        statusTicket.setMovie(ticket.getShowtime().getMovie().getTitle());
+        statusTicket.setRoom(ticket.getShowtime().getCinemaHall().getName());
         return statusTicket;
     }
 }
