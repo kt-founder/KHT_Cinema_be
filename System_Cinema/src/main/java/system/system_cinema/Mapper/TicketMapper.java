@@ -2,6 +2,7 @@ package system.system_cinema.Mapper;
 
 import org.springframework.stereotype.Component;
 import system.system_cinema.DTO.Request.TicketRequest;
+import system.system_cinema.DTO.Response.StatusTicket;
 import system.system_cinema.DTO.Response.TicketResponse;
 import system.system_cinema.Model.SeatBooking;
 import system.system_cinema.Model.Ticket;
@@ -31,10 +32,12 @@ public class TicketMapper {
         return response;
     }
 
-    public Ticket toTicket(TicketRequest request) {
-        return Ticket.builder()
-                .price(request.getPrice())
-                .isPaid(request.isPaid())
-                .build();
+    public StatusTicket toStatusTicketResponse(Ticket ticket) {
+        StatusTicket statusTicket = new StatusTicket();
+        statusTicket.setId(ticket.getId());
+        statusTicket.setPrice(ticket.getPrice());
+        statusTicket.setStatus(ticket.isPaid());
+        statusTicket.setTime(ticket.getDateBooking());
+        return statusTicket;
     }
 }
