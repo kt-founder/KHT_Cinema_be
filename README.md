@@ -17,4 +17,4 @@
 ## Link 
 Front end: https://github.com/kt-founder/KHT_Cinema_fe
 
-Document: https://docs.google.com/document/d/1cDtBO94Jp4b_yAxzCuVfXNaoX80OZgCIAAMWNCPZU1w/mobilebasic#heading=h.ly8cjjgo1y8s
+Document: [https://docs.google.com/document/d/1cDtBO94Jp4b_yAxzCuVfXNaoX80OZgCIAAMWNCPZU1w/mobilebasic#heading=h.ly8cjjgo1y8s](https://docs.google.com/document/d/1cDtBO94Jp4b_yAxzCuVfXNaoX80OZgCIAAMWNCPZU1w/edit?usp=sharing)
