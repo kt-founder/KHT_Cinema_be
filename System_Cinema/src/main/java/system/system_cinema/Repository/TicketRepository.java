@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TicketRepository extends JpaRepository<Ticket, String> {
     List<Ticket> findByShowtimeId(String showtimeId);
-    List<Ticket> findByUserId(String userId);
+    List<Ticket> findByUserIdOrderByDateBookingDesc(String userId);
 }

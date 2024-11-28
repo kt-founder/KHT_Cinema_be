@@ -1,13 +1,16 @@
 package system.system_cinema.Service.ServiceImplement;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import system.system_cinema.Config.VNPAYConfig;
+import system.system_cinema.DTO.Request.DetailsFvB;
 import system.system_cinema.DTO.Request.LockSeatsRequest;
+import system.system_cinema.Model.FoodBeverageOrder;
 import system.system_cinema.Model.SeatBooking;
 import system.system_cinema.Model.Ticket;
 import system.system_cinema.Repository.*;
@@ -28,20 +31,19 @@ public class VNPayServiceImp implements VNPayService {
     private final BookingRepository bookingRepository;
     private final ShowTimeRepository showTimeRepository;
     private final UserRepository userRepository;
+    private final SnackRepository snackRepository;
+    private final ComboRepository comboRepository;
 
     @Override
+    @Transactional
     public String CreateVNPayPayment(HttpServletRequest request, @RequestBody LockSeatsRequest lockSeatsRequest) {
-        System.out.println(lockSeatsRequest.getSeatIds().size());
         long amount = Integer.parseInt(request.getParameter("amount")) * 100L;
-        System.out.println("1");
         List<SeatBooking> existingSeats = seatBookingRepository.findBySeatIdInAndShowTimeId(lockSeatsRequest.getSeatIds(), lockSeatsRequest.getShowtimeId());
-        System.out.println("2");
         for (SeatBooking seat : existingSeats) {
             if ("sold".equals(seat.getStatus())) {
                 throw new RuntimeException("Sold Seat is already held");
             }
         }
-        System.out.println("3");
         List<SeatBooking> seatBookings = new ArrayList<>();
         for (String seatId : lockSeatsRequest.getSeatIds()) {
             SeatBooking seatBooking = SeatBooking
@@ -51,17 +53,44 @@ public class VNPayServiceImp implements VNPayService {
                     .build();
             seatBookings.add(seatBooking);
         }
-
+//      new
+        List<FoodBeverageOrder> foodBeverageOrders = new ArrayList<>();
+        if (lockSeatsRequest.getSnack() != null){
+            for (DetailsFvB d : lockSeatsRequest.getSnack()) {
+                FoodBeverageOrder f = FoodBeverageOrder.builder()
+                        .quantity(d.getQuantity())
+                        .snack(snackRepository.findById(d.getId()).orElseThrow(() -> new RuntimeException("Snack not found")))
+                        .build();
+                foodBeverageOrders.add(f);
+            }
+        }
+        if (lockSeatsRequest.getCombo() != null){
+            for (DetailsFvB d : lockSeatsRequest.getCombo()) {
+                FoodBeverageOrder f = FoodBeverageOrder.builder()
+                        .quantity(d.getQuantity())
+                        .combo(comboRepository.findById(d.getId()).orElseThrow(()->new RuntimeException("Combo not found")))
+                        .build();
+                foodBeverageOrders.add(f);
+            }
+        }
+//
         String idTicket = VNPayUtil.getRandomNumber(8);
         Ticket ticket = Ticket
                 .builder()
                 .id(idTicket)
                 .user(userRepository.findByUsername(lockSeatsRequest.getUserId()).orElseThrow(() -> new RuntimeException("User not found")))
                 .showtime(showTimeRepository.findById(lockSeatsRequest.getShowtimeId()).orElseThrow(() -> new RuntimeException("Showtime not found")))
-                .price((int) amount)
-                .seatBookings(seatBookings) // Gắn danh sách SeatBooking vào Ticket
+                .price(Integer.parseInt(request.getParameter("amount")))
+                .seatBookings(seatBookings)
                 .build();
-
+//        new
+        if (!foodBeverageOrders.isEmpty()) {
+            ticket.setFoodBeverageOrders(foodBeverageOrders);
+            for (FoodBeverageOrder fb : foodBeverageOrders) {
+                fb.setTicket(ticket);
+            }
+        }
+//
         for (SeatBooking seatBooking : seatBookings) {
             seatBooking.setTicket(ticket);
         }

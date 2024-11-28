@@ -2,8 +2,10 @@ package system.system_cinema.Mapper;
 
 import org.springframework.stereotype.Component;
 import system.system_cinema.DTO.Request.TicketRequest;
+import system.system_cinema.DTO.Response.FvBHistory;
 import system.system_cinema.DTO.Response.StatusTicket;
 import system.system_cinema.DTO.Response.TicketResponse;
+import system.system_cinema.Model.FoodBeverageOrder;
 import system.system_cinema.Model.SeatBooking;
 import system.system_cinema.Model.Ticket;
 
@@ -29,6 +31,20 @@ public class TicketMapper {
             seat.add(sb.getSeat().getSeatNumber());
         }
         response.setSeatIds(seat);
+        List<FvBHistory> history = new ArrayList<>();
+        if (ticket.getFoodBeverageOrders() != null){
+            List<FoodBeverageOrder> orders = ticket.getFoodBeverageOrders();
+            for (FoodBeverageOrder order : orders) {
+                FvBHistory fbh = FvBHistory.builder().quantity(order.getQuantity()).build();
+                if (order.getCombo() != null){
+                    fbh.setName(order.getCombo().getName());
+                } else {
+                    fbh.setName(order.getSnack().getName());
+                }
+                history.add(fbh);
+            }
+            response.setFvb(history);
+        }
         return response;
     }
 

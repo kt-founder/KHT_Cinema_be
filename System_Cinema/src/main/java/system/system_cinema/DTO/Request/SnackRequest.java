@@ -4,17 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LockSeatsRequest {
-    List<String> seatIds;
-    String showtimeId;
-    String userId;
+public class SnackRequest {
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    List<DetailsFvB> snack, combo;
+    String id, name, img;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    int price;
 }

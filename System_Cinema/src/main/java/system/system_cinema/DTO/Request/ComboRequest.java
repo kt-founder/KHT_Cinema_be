@@ -11,10 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LockSeatsRequest {
-    List<String> seatIds;
-    String showtimeId;
-    String userId;
+public class ComboRequest {
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    List<DetailsFvB> snack, combo;
+    String name,id,img;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    int price;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    List<ComboDetailRequest> snacks;
 }

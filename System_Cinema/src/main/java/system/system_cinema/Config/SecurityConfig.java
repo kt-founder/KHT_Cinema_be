@@ -44,7 +44,7 @@ import java.security.Key;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] WHITE_LIST = {"/auth/**","/swagger-ui/**","/v3/**","/movies/**","/cinema-halls/**","showtimes/**","/comments/**", "/payment/**","/seats/**","/tickets/**"};
+    private final String[] WHITE_LIST = {"/auth/**","/swagger-ui/**","/v3/**","/movies/**","/cinema-halls/**","showtimes/**","/comments/**", "/payment/**","/seats/**","/tickets/**","/combo/**","/snacks/**"};
     @Value("${jwt.signerKey}")
     private String signerKey;
     private final UserRepository userRepository;

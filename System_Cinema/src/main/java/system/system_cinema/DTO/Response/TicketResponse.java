@@ -16,5 +16,6 @@ public class TicketResponse {
     private int price;
     private LocalDateTime dateBooking;
     private List<String> infoShowTime;
-    private List<String> seatIds; // Danh sách các ghế liên quan
+    private List<String> seatIds;
+    private List<FvBHistory> fvb;
 }
