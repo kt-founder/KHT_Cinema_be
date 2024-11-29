@@ -17,18 +17,21 @@ public class Ticket {
     @Id
     private String id;
 
-    int price; // Tổng giá vé (dựa trên ghế đã đặt)
-    boolean isPaid; // Trạng thái thanh toán
-    LocalDateTime dateBooking; // Thời gian đặt vé
+    int price;
+    boolean isPaid;
+    LocalDateTime dateBooking;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User user; // Người đặt vé
+    User user;
 
     @ManyToOne
     @JoinColumn(name = "showtime_id")
-    Showtime showtime; // Xuất chiếu
+    Showtime showtime;
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
-    List<SeatBooking> seatBookings; // Danh sách ghế trong vé
+    List<SeatBooking> seatBookings;
+
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    List<FoodBeverageOrder> foodBeverageOrders;
 }

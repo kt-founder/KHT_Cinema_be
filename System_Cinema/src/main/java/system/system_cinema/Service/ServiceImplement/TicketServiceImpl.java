@@ -1,6 +1,7 @@
 package system.system_cinema.Service.ServiceImplement;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import system.system_cinema.DTO.Request.TicketRequest;
 import system.system_cinema.DTO.Response.*;
@@ -29,12 +30,12 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<StatusTicket> getStatusTickets() {
-        return ticketRepository.findAll().stream().map(ticketMapper::toStatusTicketResponse).toList();
+        return ticketRepository.findAll(Sort.by(Sort.Direction.DESC, "dateBooking")).stream().map(ticketMapper::toStatusTicketResponse).toList();
     }
 
     @Override
     public List<TicketResponse> getTicketsByUser(String userId) {
-        return ticketRepository.findByUserId(userId).stream()
+        return ticketRepository.findByUserIdOrderByDateBookingDesc(userId).stream()
                 .map(ticketMapper::toTicketResponse)
                 .collect(Collectors.toList());
     }
