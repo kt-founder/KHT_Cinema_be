@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import system.system_cinema.DTO.ApiResponse;
 import system.system_cinema.DTO.Response.MovieResponse;
 import system.system_cinema.DTO.Request.MovieRequest;
@@ -62,11 +63,11 @@ public class MovieController {
         }
     }
     @PostMapping("/create")
-    public ApiResponse<MovieResponse> createMovie(@RequestBody MovieRequest movieRequest) {
+    public ApiResponse<MovieResponse> createMovie(@RequestPart MovieRequest movieRequest, @RequestPart MultipartFile file) {
         try {
+            movieService.createMovie(movieRequest, file);
             return ApiResponse.<MovieResponse>builder()
                     .message("Successful")
-                    .data(movieService.createMovie(movieRequest))
                     .build();
         } catch (Exception e) {
             return ApiResponse.<MovieResponse>builder()
@@ -76,11 +77,11 @@ public class MovieController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResponse<MovieResponse> updateMovie(@PathVariable String id, @RequestBody MovieRequest movieRequest) {
+    public ApiResponse<MovieResponse> updateMovie(@PathVariable String id, @RequestPart MovieRequest movieRequest, @RequestPart(required = false) MultipartFile file) {
         try {
+            movieService.updateMovie(id, movieRequest, file);
             return ApiResponse.<MovieResponse>builder()
                     .message("Successful")
-                    .data(movieService.updateMovie(id, movieRequest))
                     .build();
         } catch (Exception e) {
             return ApiResponse.<MovieResponse>builder()

@@ -69,7 +69,7 @@ public class AuthenticateServiceImp implements AuthenticateService {
 
     @Override
     public TokenResponse signUp(SignUpRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername()) && userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername()) || userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new RuntimeException("Email or Username already exists");
         }
         Set<Role> roles = new HashSet<>();

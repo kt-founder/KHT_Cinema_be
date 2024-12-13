@@ -20,7 +20,7 @@ public class MovieMapper {
                 .genre(movie.getGenre())
                 .description(movie.getDescription())
                 .duration(movie.getDuration())
-                .actors(movie.getActors())
+                .actor(movie.getActors())
                 .director(movie.getDirector())
                 .releaseDate(movie.getReleaseDate())
                 .image(movie.getImage())
@@ -35,11 +35,9 @@ public class MovieMapper {
                 .genre(movieRequest.getGenre())
                 .description(movieRequest.getDescription())
                 .duration(movieRequest.getDuration())
-                .actors(movieRequest.getActors())
+                .actors(movieRequest.getActor())
                 .director(movieRequest.getDirector())
                 .releaseDate(movieRequest.getReleaseDate())
-                .image(movieRequest.getImage())
-                .isActive(movieRequest.isActive())
                 .build();
     }
 }

@@ -1,6 +1,8 @@
 package system.system_cinema.Repository;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import system.system_cinema.Model.SeatBooking;
 
@@ -8,7 +10,7 @@ import java.util.List;
 
 public interface SeatBookingRepository extends JpaRepository<SeatBooking, String> {
     List<SeatBooking> findByTicketId(String ticketId);
-
+    @Lock(LockModeType.PESSIMISTIC_READ)
     @Query( " select sb " +
             " from SeatBooking sb" +
             " JOIN Seat s on sb.seat.id in :value1" +

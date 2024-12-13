@@ -38,12 +38,14 @@ public class VNPayServiceImp implements VNPayService {
     @Transactional
     public String CreateVNPayPayment(HttpServletRequest request, @RequestBody LockSeatsRequest lockSeatsRequest) {
         long amount = Integer.parseInt(request.getParameter("amount")) * 100L;
-        List<SeatBooking> existingSeats = seatBookingRepository.findBySeatIdInAndShowTimeId(lockSeatsRequest.getSeatIds(), lockSeatsRequest.getShowtimeId());
-        for (SeatBooking seat : existingSeats) {
-            if ("sold".equals(seat.getStatus())) {
-                throw new RuntimeException("Sold Seat is already held");
-            }
-        }
+//        List<SeatBooking> existingSeats = seatBookingRepository.findBySeatIdInAndShowTimeId(lockSeatsRequest.getSeatIds(), lockSeatsRequest.getShowtimeId());
+//        for (SeatBooking seat : existingSeats) {
+//            if ("sold".equals(seat.getStatus())) {
+//                throw new RuntimeException("Sold Seat is already held");
+//            }
+//        }
+        HandleLock(lockSeatsRequest.getSeatIds(), lockSeatsRequest.getShowtimeId());
+
         List<SeatBooking> seatBookings = new ArrayList<>();
         for (String seatId : lockSeatsRequest.getSeatIds()) {
             SeatBooking seatBooking = SeatBooking
@@ -53,7 +55,6 @@ public class VNPayServiceImp implements VNPayService {
                     .build();
             seatBookings.add(seatBooking);
         }
-//      new
         List<FoodBeverageOrder> foodBeverageOrders = new ArrayList<>();
         if (lockSeatsRequest.getSnack() != null){
             for (DetailsFvB d : lockSeatsRequest.getSnack()) {
@@ -73,7 +74,6 @@ public class VNPayServiceImp implements VNPayService {
                 foodBeverageOrders.add(f);
             }
         }
-//
         String idTicket = VNPayUtil.getRandomNumber(8);
         Ticket ticket = Ticket
                 .builder()
@@ -83,14 +83,12 @@ public class VNPayServiceImp implements VNPayService {
                 .price(Integer.parseInt(request.getParameter("amount")))
                 .seatBookings(seatBookings)
                 .build();
-//        new
         if (!foodBeverageOrders.isEmpty()) {
             ticket.setFoodBeverageOrders(foodBeverageOrders);
             for (FoodBeverageOrder fb : foodBeverageOrders) {
                 fb.setTicket(ticket);
             }
         }
-//
         for (SeatBooking seatBooking : seatBookings) {
             seatBooking.setTicket(ticket);
         }
@@ -105,5 +103,15 @@ public class VNPayServiceImp implements VNPayService {
         String vnpSecureHash = VNPayUtil.hmacSHA512(vnPayConfig.getSecretKey(), hashData);
         queryUrl += "&vnp_SecureHash=" + vnpSecureHash;
         return vnPayConfig.getVnp_PayUrl() + "?" + queryUrl;
+    }
+
+    @Transactional
+    public void HandleLock (List<String> v1, String v2){
+        List<SeatBooking> existingSeats = seatBookingRepository.findBySeatIdInAndShowTimeId(v1, v2);
+        for (SeatBooking seat : existingSeats) {
+            if ("sold".equals(seat.getStatus())) {
+                throw new RuntimeException("Sold Seat is already held");
+            }
+        }
     }
 }

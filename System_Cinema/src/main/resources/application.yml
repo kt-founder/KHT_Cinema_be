@@ -17,6 +17,7 @@ spring:
         hibernate:
             ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
         properties:
+            jakarta.persistence.lock.timeout: 5000
             hibernate:
                 format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}
     mail:
