@@ -1,6 +1,7 @@
 package system.system_cinema.Config;
 
 import com.cloudinary.Cloudinary;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,9 +10,12 @@ import java.util.Map;
 
 @Configuration
 public class CloudinaryConfig {
-    private final String CLOUD_NAME = "df8c8xf7o";
-    private final String API_KEY = "741429966883155";
-    private final String API_SECRET = "ioixTuYlmPYGuaMl0SkziHvA8jY";
+    @Value("${cloudinary.cloud_name}")
+    private String CLOUD_NAME;
+    @Value("${cloudinary.api_key}")
+    private String API_KEY ;
+    @Value("${cloudinary.api_secret}")
+    private String API_SECRET;
     @Bean
     public Cloudinary cloudinary(){
         Map<String, String> config = new HashMap<>();

@@ -46,3 +46,8 @@ payment:
         version: ${PAYMENT_VNPAY_VERSION}
         command: ${PAYMENT_VNPAY_COMMAND}
         orderType: ${PAYMENT_VNPAY_ORDER_TYPE}
+
+cloudinary:
+    cloud_name: ${CLOUD_NAME}
+    api_key: ${API_KEY}
+    api_secret: ${API_SECRET}
