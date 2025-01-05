@@ -2,6 +2,7 @@ package system.system_cinema.Service.ServiceImplement;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import system.system_cinema.DTO.Request.MovieRequest;
 import system.system_cinema.DTO.Response.MovieResponse;
 import system.system_cinema.Mapper.MovieMapper;
@@ -10,6 +11,7 @@ import system.system_cinema.Repository.MovieRepository;
 import system.system_cinema.Service.MovieService;
 import system.system_cinema.Model.Comment;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,7 @@ public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
+    private final FileUploadImpl fileUploadImpl;
 
     @Override
     public List<MovieResponse> getAllMovies() {
@@ -46,14 +49,17 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponse createMovie(MovieRequest movieRequest) {
+    public void createMovie(MovieRequest movieRequest, MultipartFile movieImage) throws IOException {
         Movie movie = movieMapper.toMovie(movieRequest);
-        Movie savedMovie = movieRepository.save(movie);
-        return movieMapper.toMovieResponse(savedMovie);
+        List<String> value = fileUploadImpl.uploadFile(movieImage);
+        movie.setActive(true);
+        movie.setImage(value.get(0));
+        movie.setPublic_id(value.get(1));
+        movieRepository.save(movie);
     }
 
     @Override
-    public MovieResponse updateMovie(String id, MovieRequest movieRequest) {
+    public void updateMovie(String id, MovieRequest movieRequest, MultipartFile movieImage) throws IOException {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
 
@@ -62,11 +68,12 @@ public class MovieServiceImpl implements MovieService {
         movie.setDescription(movieRequest.getDescription());
         movie.setDirector(movieRequest.getDirector());
         movie.setReleaseDate(movieRequest.getReleaseDate());
-        movie.setImage(movieRequest.getImage());
-        movie.setActive(movieRequest.isActive());
-
-        Movie updatedMovie = movieRepository.save(movie);
-        return movieMapper.toMovieResponse(updatedMovie);
+        movie.setActors(movieRequest.getActor());
+        movie.setDuration(movieRequest.getDuration());
+        if (movieImage != null && !movieImage.isEmpty()) {
+            movie.setImage(fileUploadImpl.upDateFile(movieImage, movie.getPublic_id()));
+        }
+        movieRepository.save(movie);
     }
 
     @Override
